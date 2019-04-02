@@ -1,7 +1,6 @@
 import React from 'react';
 import sha256 from "hash.js/lib/hash/sha/256";
 import { keysMap, lifeCycleMap, highlightToml } from "./utils";
-import "./editor.css";
 
 function platform() {
     const isWindows = "navigator" in global && /Win/i.test(navigator.platform);
@@ -129,6 +128,55 @@ export default class Editor extends React.Component {
         const highlighted = highlightToml(this.state.value);
         return (
             <div className="granit-editor-container">
+                <style jsx>{`
+                    .granit-editor-container {
+                        position: relative;
+                        width: 500px;
+                        height: 300px;
+                        overflow: hidden;
+                    }
+
+                    .granit-editor {
+                        position: absolute;
+                        width: 500px;
+                        height: 300px;
+                        font-size: 16px;
+                        box-sizing: border-box;
+                        color: transparent;
+                        white-space: pre-wrap;
+                        word-break: break-all;
+                        resize: none;
+                        padding: 0;
+                        overflow: hidden;
+                        caret-color: black;
+                        font-family: 'Source Code Pro', monospace;
+                    }
+
+                    .granit-editor:focus {
+                        outline: none;
+                    }
+
+                    .granit-editor-highlight {
+                        font-size: 16px;
+                        margin: 0;
+                        width: 500px;
+                        height: 300px;
+                        white-space: pre-wrap;
+                        word-break: break-all;
+                        font-family: 'Source Code Pro', monospace;
+                        position: absolute;
+                        pointer-events: none;
+                    }
+
+                    .granit-editor-unsaved-indicator {
+                        height: 10px;
+                        width: 10px;
+                        border-radius: 50%;
+                        position: absolute;
+                        top: 5px;
+                        right: 5px;
+                    }
+                `}</style>
                 <textarea
                   ref={c => (this.input = c)}
                   className="granit-editor"

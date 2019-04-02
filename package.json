@@ -1,10 +1,10 @@
 {
   "name": "granit",
-  "version": "0.0.6",
+  "version": "0.0.11",
   "description": "Modern minimalistic code editor for the web",
   "main": "dist/index.js",
   "scripts": {
-    "build": "babel src -d dist --copy-files",
+    "transpile": "babel src -d dist --copy-files",
     "start": "webpack-dev-server --mode development"
   },
   "repository": {
@@ -21,8 +21,8 @@
   },
   "homepage": "https://github.com/genhubco/granit#readme",
   "peerDependencies": {
-     "react": "^16.3.0",
-     "react-dom": "^16.3.0"
+    "react": "^16.3.0",
+    "react-dom": "^16.3.0"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
@@ -36,6 +36,7 @@
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "style-loader": "^0.23.1",
+    "styled-jsx": "^3.2.1",
     "webpack": "^4.29.6",
     "webpack-cli": "^3.3.0",
     "webpack-dev-server": "^3.2.1"
