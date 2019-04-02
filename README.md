@@ -149,7 +149,7 @@ const highlightString = (text) => {
 
 export default class Home extends React.Component {
     onSave(text) {
-        request("http://destination.com", text);
+        post("http://destination.com", text);
     }
     render() {
         return (
