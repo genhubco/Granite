@@ -6,7 +6,7 @@
   "scripts": {
     "transpile": "babel src -d dist --copy-files",
     "start": "webpack-dev-server --mode development",
-    "publish": "npm run transpile && npm version patch && npm publish"
+    "publish": "npm run transpile && npm version patch"
   },
   "repository": {
     "type": "git",
