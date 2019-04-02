@@ -131,25 +131,26 @@ export default class Editor extends React.Component {
                 <style jsx global>{`
                     .granit-editor-container {
                         position: relative;
-                        width: 500px;
-                        height: 300px;
+                        width: ${this.props.width || 500}px;
+                        height: ${this.props.height || 300}px;
                         overflow: hidden;
                     }
 
                     .granit-editor {
                         position: absolute;
-                        width: 500px;
-                        height: 300px;
-                        font-size: 16px;
+                        width: ${this.props.width || 500}px;
+                        height: ${this.props.height || 300}px;
+                        font-size: ${this.props.fontSize || 16}px;
                         box-sizing: border-box;
                         color: transparent;
                         white-space: pre-wrap;
                         word-break: break-all;
                         resize: none;
-                        padding: 0;
+                        margin: 0;
+                        padding: ${this.props.padding || 0}px;
                         overflow: hidden;
                         caret-color: black;
-                        font-family: 'Source Code Pro', monospace;
+                        font-family: ${this.props.fontFamily || 'Source Code Pro'}, monospace;
                     }
 
                     .granit-editor:focus {
@@ -157,11 +158,12 @@ export default class Editor extends React.Component {
                     }
 
                     .granit-editor-highlight {
-                        font-size: 16px;
+                        font-size: ${this.props.fontSize || 16}px;
+                        padding: ${this.props.padding || 0}px;
                         margin: 0;
                         white-space: pre-wrap;
                         word-break: break-all;
-                        font-family: 'Source Code Pro', monospace;
+                        font-family: ${this.props.fontFamily || 'Source Code Pro'}, monospace;
                         position: absolute;
                         pointer-events: none;
                     }
