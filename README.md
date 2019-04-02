@@ -1,0 +1,1 @@
+![Bg](static/bg.svg)
