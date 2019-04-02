@@ -57,26 +57,26 @@ Other:
 // returns newRecord - { value, selectionStart, selectionEnd }
 const handler = (e, record) => newRecord;
 {
-    // platform (which platform are you on?) - "mac", "win" or "other"
-    // metaKey (is cmd key pressed) - bool
-    // ctrlKey (is ctrl key pressed) - bool
-    // shiftKey (is shift key pressed) - bool
-    // altKey (is alt key pressed) - bool
+    // platform (for which OS?) - "mac", "win" or "other"
+    // metaKey (when cmd key is down) - bool
+    // ctrlKey (when ctrl key is down) - bool
+    // shiftKey (when shift key is down) - bool
+    // altKey (when alt key is down) - bool
     // keyCode - Number (see https://www.cambiaresearch.com/articles/15/javascript-char-codes-key-codes)
-    // withSelection (is text selected) - bool
+    // withSelection (when text is selected) - bool
     "[platform],[metaKey],[ctrlKey],[shiftKey],[altKey],[keyCode],[withSelection]": [handler]
 }
 ```
 * `lifeCycleMap` - map of keys pressed to undo, redo, save the text:
 ```js
 {
-    // platform (which platform are you on?) - "mac", "win" or "other"
-    // metaKey (is cmd key pressed) - bool
-    // ctrlKey (is ctrl key pressed) - bool
-    // shiftKey (is shift key pressed) - bool
-    // altKey (is alt key pressed) - bool
+    // platform (for which OS?) - "mac", "win" or "other"
+    // metaKey (when cmd key is down) - bool
+    // ctrlKey (when ctrl key is down) - bool
+    // shiftKey (when shift key is down) - bool
+    // altKey (when alt key is down) - bool
     // keyCode - Number (see https://www.cambiaresearch.com/articles/15/javascript-char-codes-key-codes)
-    // withSelection (is text selected) - bool
+    // withSelection (when text is selected) - bool
     
     // handler - editor lifecycle function - "undo", "redo", "save"
     "[platform],[metaKey],[ctrlKey],[shiftKey],[altKey],[keyCode],[withSelection]": "[handler]"
