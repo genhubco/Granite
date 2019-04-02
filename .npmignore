@@ -5,3 +5,4 @@ examples
 .babelrc
 .gitignore
 webpack.config.js
+static
