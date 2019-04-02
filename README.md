@@ -37,27 +37,19 @@ export default class Home extends React.Component {
 ## Props
 Style related:  
   
-`width` - width of the editor - default `500px`  
-  
-`height` - heigth of the editor - default `300px`  
-  
-`padding` - padding of the editor - default `0`  
-  
-`fontSize` - fontSize of the content - default `16px`  
-  
-`fontFamily` - fontFamily of the content - default `Source Code Pro`  
-
+* `width` - width of the editor - default `500px`  
+* `height` - heigth of the editor - default `300px`  
+* `padding` - padding of the editor - default `0`  
+* `fontSize` - fontSize of the content - default `16px`  
+*  `fontFamily` - fontFamily of the content - default `Source Code Pro`  
 
 Other:  
   
-`defaultValue` - default value of textarea when component mounts
-
-`onSave` - function called when user user saves the changes - called when "save" lifecycle is called, which is defined in
+* `defaultValue` - default value of textarea when component mounts
+* `onSave` - function called when user user saves the changes - called when "save" lifecycle is called, which is defined in
 `lifeCycleMap` object
-
-`highlight` - function that outputs text wrapped in html elements for syntax highlighting
-  
-`keysMap` - map of keys pressed to edit text:
+* `highlight` - function that outputs text wrapped in html elements for syntax highlighting
+* `keysMap` - map of keys pressed to edit text:
 ```js
 // handler - function called when keys match
 // arg e - event object from `handleKeyDown`
@@ -75,7 +67,7 @@ const handler = (e, record) => newRecord;
     "[platform],[metaKey],[ctrlKey],[shiftKey],[altKey],[keyCode],[withSelection]": [handler]
 }
 ```
-`lifeCycleMap` - map of keys pressed to undo, redo, save the text:
+* `lifeCycleMap` - map of keys pressed to undo, redo, save the text:
 ```js
 {
     // platform (which platform are you on?) - "mac", "win" or "other"
