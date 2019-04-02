@@ -1,7 +1,7 @@
 ![Bg](static/bg.svg)
 
 ## About
-Minimalistic, modular code editor (~200 lines of code) for the web. The core library contains only lifecycle functions like "undo", "redo", "save". All changes are handled inside `handleKeyDown` function, and all other events are turned of. Library should be used with [granit-utils](https://github.com/genhubco/granit-utils) for handling pressed keys, or you can make your own (see `keysMap` and `lifeCycleMap` props).
+Minimalistic, modular code editor (~200 lines of code) for the web. The core library contains only lifecycle functions like "undo", "redo", "save". Library should be used with [granit-utils](https://github.com/genhubco/granit-utils) for handling pressed keys, or you can make your own (see `keysMap` and `lifeCycleMap` props).
 
 ## Installing:
 ```
