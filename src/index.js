@@ -1,6 +1,5 @@
 import React from 'react';
 import sha256 from "hash.js/lib/hash/sha/256";
-import { keysMap, lifeCycleMap, highlightToml } from "./utils";
 
 function platform() {
     const isWindows = "navigator" in global && /Win/i.test(navigator.platform);
@@ -108,6 +107,7 @@ export default class Editor extends React.Component {
 
     handleKeyDown(e) {
         const { value, selectionStart, selectionEnd } = e.target;
+        const { keysMap, lifeCycleMap } = this.props;
         e.preventDefault();
         let record = { value, selectionStart, selectionEnd };
         const keysPressed = [platform(), e.metaKey, e.ctrlKey, e.shiftKey, e.altKey, e.keyCode, selectionStart !== selectionEnd];
@@ -125,7 +125,10 @@ export default class Editor extends React.Component {
     }
 
     render() {
-        const highlighted = highlightToml(this.state.value);
+        let highlighted = this.state.value;
+        if (this.props.highlight) {
+            highlighted = this.props.highlight(this.state.value);
+        }
         return (
             <div className="granit-editor-container">
                 <style jsx global>{`
