@@ -6,22 +6,12 @@ const htmlWebpackPlugin = new HtmlWebpackPlugin({
 });
 module.exports = {
     entry: path.join(__dirname, "examples/src/index.js"),
-    output: {
-        path: path.join(__dirname, "dist/"),
-        filename: "index.js"
-    },
     module: {
-        rules: [
-            {
-                test: /\.(js|jsx)$/,
-                loader: "babel-loader",
-                exclude: /node_modules/
-            },
-            {
-                test: /\.css$/,
-                loader: "style-loader!css-loader?modules=true"
-            }
-        ]
+        rules: [{
+            test: /\.(js|jsx)$/,
+            loader: "babel-loader",
+            exclude: /node_modules/
+        }]
     },
     plugins: [htmlWebpackPlugin],
     resolve: {
