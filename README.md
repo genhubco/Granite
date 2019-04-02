@@ -90,3 +90,90 @@ const handler = (e, record) => newRecord;
     "[platform],[metaKey],[ctrlKey],[shiftKey],[altKey],[keyCode],[withSelection]": "[handler]"
 }
 ```
+
+## With [granit-utils](https://github.com/genhubco/granit-utils)
+```jsx
+import Editor from "granit";
+import { keysMap, lifeCycleMap, highlightToml } = "granit-utils";
+
+export default class Home extends React.Component {
+    onSave(text) {
+        request("http://destination.com", text);
+    }
+    render() {
+        return (
+          <div>
+            <Editor
+              width={750}
+              height={500}
+              padding={20}
+              defaultValue="Hello there"
+              keysMap={keysMap}
+              lifeCycleMap={lifeCycleMap}
+              highlight={highlightToml}
+              onSave={this.onSave}
+            />
+          </div>
+        );
+    }
+}
+```
+
+## Build you own map of keys
+```jsx
+import Editor from "granit";
+
+const enterKeyPressed = (e, record) => {
+    const newRecord = {...record};
+    const stringUntilSelectionStart = newRecord.value.substring(0, newRecord.selectionStart);
+    const stringAfterSelectionStart = newRecord.value.substring(newRecord.selectionStart, newRecord.value.length);
+    newRecord.value = stringUntilSelectionStart + "\n" + stringAfterSelectionStart;
+    newRecord.selectionStart += 1;
+    newRecord.selectionEnd += 1;
+    return newRecord;
+}
+
+const keysMap = {
+    [String(["mac", false, false, false, false, 13, false])]: enterKeyPressed
+};
+
+const lifeCycleMap = {
+    [String(["mac", true, false, false, false, 90, false])]: "undo"
+}
+
+const highlightString = (text) => {
+    const rows = text.split("\n");
+    const newRows = rows.map(item => {
+        const string = /^[A-Za-z0-9_-]+\s=\s".*"$/;
+        const stringMatch = item.match(string);
+        if(stringMatch) {
+            const splitted = stringMatch[0].split(" = ");
+            return `<span class="string">${splitted[0]}</span> = <span class="string">${splitted[1]}</span>`;
+        }
+        return item;
+    });
+    return newRows.join('\n');
+}
+
+export default class Home extends React.Component {
+    onSave(text) {
+        request("http://destination.com", text);
+    }
+    render() {
+        return (
+          <div>
+            <Editor
+              width={750}
+              height={500}
+              padding={20}
+              defaultValue="Hello there"
+              keysMap={keysMap}
+              lifeCycleMap={lifeCycleMap}
+              highlight={highlightString}
+              onSave={this.onSave}
+            />
+          </div>
+        );
+    }
+}
+```
