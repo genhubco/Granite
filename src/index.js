@@ -128,7 +128,7 @@ export default class Editor extends React.Component {
         const highlighted = highlightToml(this.state.value);
         return (
             <div className="granit-editor-container">
-                <style jsx>{`
+                <style jsx global>{`
                     .granit-editor-container {
                         position: relative;
                         width: 500px;
@@ -159,8 +159,6 @@ export default class Editor extends React.Component {
                     .granit-editor-highlight {
                         font-size: 16px;
                         margin: 0;
-                        width: 500px;
-                        height: 300px;
                         white-space: pre-wrap;
                         word-break: break-all;
                         font-family: 'Source Code Pro', monospace;
