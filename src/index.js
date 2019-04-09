@@ -131,29 +131,49 @@ export default class Editor extends React.Component {
         }
         return (
             <div className="granit-editor-container">
+                <pre
+                    aria-hidden="true"
+                    className="granit-editor-highlight"
+                    {...(typeof highlighted === 'string'
+                        ? { dangerouslySetInnerHTML: { __html: highlighted + '<br />' } }
+                        : { children: highlighted })}
+                />
+                <textarea
+                  ref={c => (this.input = c)}
+                  className="granit-editor"
+                  onKeyDown={this.handleKeyDown.bind(this)}
+                  autoCapitalize="off"
+                  autoComplete="off"
+                  autoCorrect="off"
+                  spellCheck={false}
+                  data-gramm={false}
+                />
+                {this.state.contentHash !== this.state.savedHash && <div className="granit-editor-unsaved-indicator" />}
                 <style jsx global>{`
                     .granit-editor-container {
                         position: relative;
-                        width: ${this.props.width || 500}px;
-                        height: ${this.props.height || 300}px;
+                        width: ${this.props.width}px;
+                        height: ${this.props.height}px;
                         overflow: hidden;
                     }
 
                     .granit-editor {
                         position: absolute;
-                        width: ${this.props.width || 500}px;
-                        height: ${this.props.height || 300}px;
-                        font-size: ${this.props.fontSize || 16}px;
+                        width: ${this.props.width}px;
+                        height: ${this.props.height}px;
+                        font-size: ${this.props.fontSize}px;
                         box-sizing: border-box;
                         color: transparent;
                         white-space: pre-wrap;
                         word-break: break-all;
                         resize: none;
                         margin: 0;
-                        padding: ${this.props.padding || 0}px;
+                        padding: ${this.props.padding}px;
                         overflow: hidden;
                         caret-color: black;
-                        font-family: ${this.props.fontFamily || 'Source Code Pro'}, monospace;
+                        background: transparent;
+                        border: none;
+                        font-family: ${this.props.fontFamily}, monospace;
                     }
 
                     .granit-editor:focus {
@@ -161,12 +181,12 @@ export default class Editor extends React.Component {
                     }
 
                     .granit-editor-highlight {
-                        font-size: ${this.props.fontSize || 16}px;
-                        padding: ${this.props.padding || 0}px;
+                        font-size: ${this.props.fontSize}px;
+                        padding: ${this.props.padding}px;
                         margin: 0;
                         white-space: pre-wrap;
                         word-break: break-all;
-                        font-family: ${this.props.fontFamily || 'Source Code Pro'}, monospace;
+                        font-family: ${this.props.fontFamily}, monospace;
                         position: absolute;
                         pointer-events: none;
                     }
@@ -180,25 +200,18 @@ export default class Editor extends React.Component {
                         right: 5px;
                     }
                 `}</style>
-                <textarea
-                  ref={c => (this.input = c)}
-                  className="granit-editor"
-                  onKeyDown={this.handleKeyDown.bind(this)}
-                  autoCapitalize="off"
-                  autoComplete="off"
-                  autoCorrect="off"
-                  spellCheck={false}
-                  data-gramm={false}
-                />
-                <pre
-                    aria-hidden="true"
-                    className="granit-editor-highlight"
-                    {...(typeof highlighted === 'string'
-                        ? { dangerouslySetInnerHTML: { __html: highlighted + '<br />' } }
-                        : { children: highlighted })}
-                />
-                {this.state.contentHash !== this.state.savedHash && <div className="granit-editor-unsaved-indicator" />}
             </div>
         );
     }
 };
+
+Editor.defaultProps = {
+    keysMap: {},
+    lifeCycleMap: {},
+    width: 500,
+    height: 300,
+    fontSize: 16,
+    padding: 0,
+    fontFamily: "Source Code Pro",
+    onSave: () => {}
+}
