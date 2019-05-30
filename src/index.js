@@ -105,7 +105,7 @@ export default class Editor extends React.Component {
         this.props.onSave(this.state.value);
     }
 
-    async handleKeyDown(e) {
+    handleKeyDown(e) {
         const { value, selectionStart, selectionEnd } = e.target;
         const { keysMap, lifeCycleMap } = this.props;
         e.preventDefault();
@@ -120,8 +120,12 @@ export default class Editor extends React.Component {
         if (!keysMatch) {
             return;
         }
-        const newRecord = await keysMatch(e, record);
-        this.updateStack(newRecord);
+        const res = keysMatch(e, record);
+        if (res.then) {
+            res.then(newRecord => this.updateStack(newRecord));
+        } else {
+            this.updateStack(res);
+        }
     }
 
     render() {
