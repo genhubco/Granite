@@ -4,9 +4,10 @@ import Editor from '../../src/index';
 import { keysMap, lifeCycleMap } from "granit-utils";
 const App = () => (
     <Editor
-        defaultValue="aaaa"
+        initialValue="aaalasnfljkadnfjlsndjknfskja"
         keysMap={keysMap}
         lifeCycleMap={lifeCycleMap}
+        editable={false}
     />
 );
 render(<App />, document.getElementById("root"));

@@ -16,98 +16,67 @@ function platform() {
 export default class Editor extends React.Component {
     constructor(props) {
         super(props);
-
-        const defaultHash = sha256().update("").digest("hex");
-        this.state = {
-            contentHash: defaultHash,
-            savedHash: defaultHash,
-            value: ""
-        };
-
-        this.stack = [];
+        this.stack = [{
+            selectionStart: props.initialValue.length,
+            selectionEnd: props.initialValue.length,
+            value: props.initialValue
+        }];
         this.archiveStack = [];
+
+        const defaultHash = sha256().update(props.initialValue).digest("hex");
+        this.state = { contentHash: defaultHash, savedHash: defaultHash };
 
         this.redo = this.redo.bind(this);
         this.undo = this.undo.bind(this);
         this.handleKeyDown = this.handleKeyDown.bind(this);
-        this.updateInput = this.updateInput.bind(this);
+        this.onRef = this.onRef.bind(this);
     }
 
-    componentDidMount() {
-        if (!this.props.defaultValue) {
-            return;
-        }
-        this.updateStack({
-            value: this.props.defaultValue,
-            selectionStart: this.props.defaultValue.length,
-            selectionEnd: this.props.defaultValue.length
-        });
-        this.setState({
-            savedHash: sha256().update(this.props.defaultValue).digest("hex"),
-        });
-        this.props.onSave(this.props.defaultValue);
-    }
-
-    updateInput() {
-        const input = this.input;
-
-        if (!input) return;
-
-        let record = this.stack[this.stack.length - 1];
-        if (!record) {
-            record = {
-                value: "",
-                selectionStart: 0,
-                selectionEnd: 0
-            };
-        }
-        input.value = record.value;
-        input.selectionStart = record.selectionStart;
-        input.selectionEnd = record.selectionEnd;
-
-        this.setState({
-            value: record.value,
-            contentHash: sha256().update(record.value).digest("hex"),
-        });
-    }
-
-    updateStack(record) {
-        this.stack.push(record);
+    update(newRecord) {
+        this.stack.push(newRecord);
         this.archiveStack = [];
-        this.updateInput();
+
+        const record = this.stack[this.stack.length - 1];
+        this.setState({ contentHash: sha256().update(record.value).digest("hex") });
     }
 
     undo() {
-        const record = this.stack.pop();
-        if (!record) {
+        if (this.stack.length === 1) {
             return;
         }
-        this.archiveStack.push(record);
-        this.updateInput();
+        const removedRecord = this.stack.pop();
+        this.archiveStack.push(removedRecord);
+
+        const record = this.stack[this.stack.length - 1];
+        this.setState({ contentHash: sha256().update(record.value).digest("hex") });
     }
 
     redo() {
-        const record = this.archiveStack.pop();
-        if (!record) {
+        const retrievedRecord = this.archiveStack.pop();
+        if (!retrievedRecord) {
             return;
         }
-        this.stack.push(record);
-        this.updateInput();
+        this.stack.push(retrievedRecord);
+
+        const record = this.stack[this.stack.length - 1];
+        this.setState({ contentHash: sha256().update(record.value).digest("hex") });
     }
 
     save() {
         if (this.state.savedHash === this.state.contentHash) {
             return;
         }
-        this.setState({
-            savedHash: sha256().update(this.state.value).digest("hex"),
-        });
-        this.props.onSave(this.state.value);
+        const record = this.stack[this.stack.length - 1];
+        this.setState({ savedHash: sha256().update(record.value).digest("hex") });
+        this.props.onSave(record.value);
     }
 
     handleKeyDown(e) {
         const { value, selectionStart, selectionEnd } = e.target;
-        const { keysMap, lifeCycleMap } = this.props;
+        const { keysMap, lifeCycleMap, editable } = this.props;
+        if (!editable) {
+            return;
+        }
         e.preventDefault();
         const record = { value, selectionStart, selectionEnd };
         const keysPressed = [platform(), e.metaKey, e.ctrlKey, e.shiftKey, e.altKey, e.keyCode, selectionStart !== selectionEnd];
@@ -122,22 +91,38 @@ export default class Editor extends React.Component {
         }
         const res = keysMatch(e, record);
         if (res.then) {
-            res.then(newRecord => this.updateStack(newRecord));
+            res.then(newRecord => this.update(newRecord));
         } else {
-            this.updateStack(res);
+            this.update(res);
         }
     }
 
+    onRef(ref) {
+        this.input = ref;
+        const record = this.stack[0];
+        this.input.value = record.value;
+        this.input.selectionStart = record.selectionStart;
+        this.input.selectionEnd = record.selectionEnd;
+    }
+
     render() {
-        let highlighted = this.state.value;
-        if (this.props.highlight) {
-            highlighted = this.props.highlight(this.state.value);
+        const { highlight, editable } = this.props;
+
+        const record = this.stack[this.stack.length - 1];
+        if (this.input) {
+            this.input.value = record.value;
+            this.input.selectionStart = record.selectionStart;
+            this.input.selectionEnd = record.selectionEnd;
         }
+
+        let highlighted = highlight(record.value);
+
         const containerStyles = {
             position: "relative",
             width: `${this.props.width}px`,
             height: `${this.props.height}px`,
-            overflow: "hidden"
+            overflow: "hidden",
+            background: "#f2f3f4"
         };
 
         const editorStyles = {
@@ -185,20 +170,19 @@ export default class Editor extends React.Component {
                     aria-hidden="true"
                     className="granit-editor-highlight"
                     style={highlightStyles}
-                    {...(typeof highlighted === 'string'
-                        ? { dangerouslySetInnerHTML: { __html: highlighted + '<br />' } }
-                        : { children: highlighted })}
+                    dangerouslySetInnerHTML={{ __html: highlighted + '<br />' }}
                 />
                 <textarea
-                  ref={c => (this.input = c)}
-                  className="granit-editor"
-                  style={editorStyles}
-                  onKeyDown={this.handleKeyDown.bind(this)}
-                  autoCapitalize="off"
-                  autoComplete="off"
-                  autoCorrect="off"
-                  spellCheck={false}
-                  data-gramm={false}
+                    ref={this.onRef}
+                    className="granit-editor"
+                    style={editorStyles}
+                    onKeyDown={this.handleKeyDown}
+                    autoCapitalize="off"
+                    autoComplete="off"
+                    autoCorrect="off"
+                    spellCheck={false}
+                    data-gramm={false}
+                    readOnly={!editable}
                 />
                 {this.state.contentHash !== this.state.savedHash && <div className="granit-editor-unsaved-indicator" style={indicatorStyles} />}
             </div>
@@ -213,6 +197,9 @@ Editor.defaultProps = {
     height: 300,
     fontSize: 16,
     padding: 0,
+    initialValue: "",
     fontFamily: "Source Code Pro",
-    onSave: () => {}
+    onSave: () => {},
+    highlight: (a) => a,
+    editable: true
 }
