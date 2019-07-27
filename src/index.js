@@ -16,6 +16,8 @@ function platform() {
 export default class Editor extends React.Component {
     constructor(props) {
         super(props);
+        this.input = null;
+
         this.stack = [{
             selectionStart: props.initialValue.length,
             selectionEnd: props.initialValue.length,
@@ -100,9 +102,11 @@ export default class Editor extends React.Component {
     onRef(ref) {
         this.input = ref;
         const record = this.stack[0];
-        this.input.value = record.value;
-        this.input.selectionStart = record.selectionStart;
-        this.input.selectionEnd = record.selectionEnd;
+        if (this.input) {
+            this.input.value = record.value;
+            this.input.selectionStart = record.selectionStart;
+            this.input.selectionEnd = record.selectionEnd;
+        }
     }
 
     render() {
