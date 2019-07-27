@@ -121,8 +121,7 @@ export default class Editor extends React.Component {
             position: "relative",
             width: `${this.props.width}px`,
             height: `${this.props.height}px`,
-            overflow: "hidden",
-            background: "#f2f3f4"
+            overflow: "hidden"
         };
 
         const editorStyles = {
