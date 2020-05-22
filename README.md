@@ -1,7 +1,7 @@
 ![Bg](static/bg.svg)
 
 ## About
-Minimalistic, modular code editor (~200 lines of code) for the web.
+Minimalistic, modular code editor for the web.
 
 ## Installing:
 ```
@@ -22,7 +22,6 @@ export default class Home extends React.Component {
             <Editor
               width={750}
               height={500}
-              padding={20}
               defaultValue="Hello there"
               keysMap={keysMap}
               lifeCycleMap={lifeCycleMap}
@@ -41,7 +40,6 @@ export default class Home extends React.Component {
 * `width`: 500,
 * `height`: 300,
 * `fontSize`: 16,
-* `padding`: 0,
 * `errors`: [],
 * `warnings`: [],
 * `background`: "#f2f3f4",
@@ -98,7 +96,6 @@ export default class Home extends React.Component {
             <Editor
               width={750}
               height={500}
-              padding={20}
               defaultValue="Hello there"
               keysMap={keysMap}
               lifeCycleMap={lifeCycleMap}
