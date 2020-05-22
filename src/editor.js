@@ -18,6 +18,7 @@ export default class Editor extends React.Component {
 		this.inputRef = null;
 		this.highlightRef = null;
 		this.errorsRef = null;
+		this.linesRef = null;
 
 		this.stack = [{
 			selectionStart: props.initialValue.length,
@@ -33,6 +34,7 @@ export default class Editor extends React.Component {
 		this.onRef = this.onRef.bind(this);
 		this.onHighlightRef = this.onHighlightRef.bind(this);
 		this.onErrorsRef = this.onErrorsRef.bind(this);
+		this.onLinesRef = this.onLinesRef.bind(this);
 		this.onScroll = this.onScroll.bind(this);
 	}
 
@@ -140,6 +142,10 @@ export default class Editor extends React.Component {
 		this.errorsRef = ref;
 	}
 
+	onLinesRef(ref) {
+		this.linesRef = ref;
+	}
+
 	onScroll(e) {
 		if (!this.highlightRef) {
 			return;
@@ -154,6 +160,13 @@ export default class Editor extends React.Component {
 
 		this.errorsRef.scrollTop = e.target.scrollTop;
 		this.errorsRef.scrollLeft = e.target.scrollLeft;
+
+		if (!this.linesRef) {
+			return;
+		}
+
+		this.linesRef.scrollTop = e.target.scrollTop;
+		this.linesRef.scrollLeft = e.target.scrollLeft;
 	}
 
 	render() {
@@ -165,7 +178,6 @@ export default class Editor extends React.Component {
 			height,
 			fontFamily,
 			fontSize,
-			padding,
 			background,
 			errors,
 			warnings
@@ -180,69 +192,92 @@ export default class Editor extends React.Component {
 
 		let highlighted = renderHighlight(record.value);
 		let errorsHighlight = renderErrors(record.value, errors, warnings);
+		let lines = record.value.split("\n");
 
 		const editorStyles = {
 			fontSize: `${fontSize}px`,
-			padding: `${padding}px`,
 			height: "100%",
 			width: "100%",
 			overflow: "hidden",
 			whiteSpace: "pre",
 			wordBreak: "normal",
 			margin: 0,
+			padding: 0,
 			tabSize: 4,
 			fontFamily: fontFamily,
 			position: "absolute",
+			outline: "none"
 		};
 
 		return (
-			<div className="granit-editor-container" style={{
-				position: "relative",
+			<div className="granit-editor" style={{
 				height: `${height}px`,
 				width: `${width}px`,
-				background
+				display: "flex",
 			}}>
-				{
-					(errors.length || warnings.length) ?
-						<div
-							className="granit-editor-errors"
-							style={{
-								...editorStyles,
-								color: "transparent",
-								pointerEvents: "none",
-							}}
-							ref={this.onErrorsRef}
-							dangerouslySetInnerHTML={{ __html: errorsHighlight + '<br />' }}
-						/> : null
-				}
-				<div
-					className="granit-editor-highlight"
-					style={{ ...editorStyles, pointerEvents: "none", }}
-					ref={this.onHighlightRef}
-					dangerouslySetInnerHTML={{ __html: highlighted + '<br />' }}
-				/>
-				<textarea
-					ref={this.onRef}
-					className="granit-editor"
-					onScroll={this.onScroll}
-					style={{
-						...editorStyles,
-						color: "transparent",
-						resize: "none",
-						caretColor: "black",
-						background: "transparent",
-						border: "none",
-						zIndex: 3,
-					}}
-					onChange={this.handleChange}
-					onKeyDown={this.handleKeyDown}
-					autoCapitalize="off"
-					autoComplete="off"
-					autoCorrect="off"
-					spellCheck={false}
-					data-gramm={false}
-					readOnly={!editable}
-				/>
+				<div ref={this.onLinesRef} className="granit-editor-lines" style={{
+					padding: "0 10px",
+					color: "#929ba3",
+					background,
+					fontSize: `${fontSize}px`,
+					fontFamily: fontFamily,
+					overflow: "hidden"
+				}}>
+					{lines.map((_, i) => (
+						<span key={`line-${i}`} style={{
+							display: "block",
+						}}>{i}</span>
+					))}
+				</div>
+				<div className="granit-editor-container" style={{
+					position: "relative",
+					height: "100%",
+					width: "100%",
+					background,
+					display: "inline-block"
+				}}>
+					{
+						(errors.length || warnings.length) ?
+							<div
+								className="granit-editor-errors"
+								style={{
+									...editorStyles,
+									color: "transparent",
+									pointerEvents: "none",
+								}}
+								ref={this.onErrorsRef}
+								dangerouslySetInnerHTML={{ __html: errorsHighlight + '<br />' }}
+							/> : null
+					}
+					<div
+						className="granit-editor-highlight"
+						style={{ ...editorStyles, pointerEvents: "none", }}
+						ref={this.onHighlightRef}
+						dangerouslySetInnerHTML={{ __html: highlighted + '<br />' }}
+					/>
+					<textarea
+						ref={this.onRef}
+						className="granit-editor-textarea"
+						onScroll={this.onScroll}
+						style={{
+							...editorStyles,
+							color: "transparent",
+							resize: "none",
+							caretColor: "black",
+							background: "transparent",
+							border: "none",
+							overflow: "scroll"
+						}}
+						onChange={this.handleChange}
+						onKeyDown={this.handleKeyDown}
+						autoCapitalize="off"
+						autoComplete="off"
+						autoCorrect="off"
+						spellCheck={false}
+						data-gramm={false}
+						readOnly={!editable}
+					/>
+				</div>
 			</div>
 		);
 	}
@@ -254,7 +289,6 @@ Editor.defaultProps = {
 	width: 500,
 	height: 300,
 	fontSize: 16,
-	padding: 0,
 	errors: [],
 	warnings: [],
 	background: "#f2f3f4",
