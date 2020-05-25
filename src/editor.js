@@ -286,8 +286,8 @@ export default class Editor extends React.Component {
 Editor.defaultProps = {
 	keyMap: {},
 	lifeCycleMap: {},
-	width: 500,
-	height: 300,
+	width: 730,
+	height: 400,
 	fontSize: 16,
 	errors: [],
 	warnings: [],

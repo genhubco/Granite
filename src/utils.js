@@ -7,8 +7,8 @@ function renderEmergence(text) {
 	text = text.replace(signs, (match, p1) => match
 		.replace(p1, `<span class="granit-sign" style="color: #929ba3;">${p1}</span>`)
 	).replace(fnName, (match, p1, p2) => match
-		.replace(p1, `<span class="granit-keyword" style="color: #e22bdf;">${p1}</span>`)
 		.replace(p2, `<span class="granit-definition" style="color: #007fff;">${p2}</span>`)
+		.replace(p1, `<span class="granit-keyword" style="color: #e22bdf;">${p1}</span>`)
 	).replace(keywords, (match, p1) => match
 		.replace(p1, `<span class="granit-keyword" style="color: #e22bdf;">${p1}</span>`)
 	).replace(fnCall, (match, p1) => match
