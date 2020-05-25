@@ -147,27 +147,20 @@ export default class Editor extends React.Component {
 	}
 
 	onScroll(e) {
-		console.log(this.highlightRef, this.errorsRef, this.linesRef);
-		if (!this.highlightRef) {
-			return;
+		if (this.highlightRef) {
+			this.highlightRef.scrollTop = e.target.scrollTop;
+			this.highlightRef.scrollLeft = e.target.scrollLeft;
 		}
 
-		this.highlightRef.scrollTop = e.target.scrollTop;
-		this.highlightRef.scrollLeft = e.target.scrollLeft;
-
-		if (!this.errorsRef) {
-			return;
+		if (this.errorsRef) {
+			this.errorsRef.scrollTop = e.target.scrollTop;
+			this.errorsRef.scrollLeft = e.target.scrollLeft;
 		}
 
-		this.errorsRef.scrollTop = e.target.scrollTop;
-		this.errorsRef.scrollLeft = e.target.scrollLeft;
-
-		if (!this.linesRef) {
-			return;
+		if (this.linesRef) {
+			this.linesRef.scrollTop = e.target.scrollTop;
+			this.linesRef.scrollLeft = e.target.scrollLeft;
 		}
-
-		this.linesRef.scrollTop = e.target.scrollTop;
-		this.linesRef.scrollLeft = e.target.scrollLeft;
 	}
 
 	render() {
