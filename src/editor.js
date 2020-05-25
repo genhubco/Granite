@@ -147,6 +147,7 @@ export default class Editor extends React.Component {
 	}
 
 	onScroll(e) {
+		console.log(this.highlightRef, this.errorsRef, this.linesRef);
 		if (!this.highlightRef) {
 			return;
 		}
@@ -221,7 +222,8 @@ export default class Editor extends React.Component {
 					background,
 					fontSize: `${fontSize}px`,
 					fontFamily: fontFamily,
-					overflow: "hidden"
+					overflow: "hidden",
+					textAlign: "right"
 				}}>
 					{lines.map((_, i) => (
 						<span key={`line-${i}`} style={{
