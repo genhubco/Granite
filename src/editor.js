@@ -1,5 +1,4 @@
 import React from "react";
-import hash from "object-hash";
 
 function platform() {
 	const isWindows = "navigator" in global && /Win/i.test(navigator.platform);
@@ -39,13 +38,18 @@ export default class Editor extends React.Component {
 		this.onScroll = this.onScroll.bind(this);
 	}
 
+	componentDidMount() {
+		const record = this.stack[this.state.current];
+		this.props.onChange(record.value);
+		this.props.onSave(record.value);
+	}
+
 	update(newRecord) {
 		this.stack = this.stack.slice(0, this.state.current + 1);
 		this.stack.push(newRecord);
 
 		this.setState({ current: this.state.current + 1 });
-		const h = hash(newRecord.value);
-		this.props.onHashChange(h);
+		this.props.onChange(newRecord.value);
 	}
 
 	undo() {
@@ -56,8 +60,7 @@ export default class Editor extends React.Component {
 		this.setState({ current: newState });
 
 		const record = this.stack[newState];
-		const h = hash(record.value);
-		this.props.onHashChange(h);
+		this.props.onChange(record.value);
 	}
 
 	redo() {
@@ -68,14 +71,12 @@ export default class Editor extends React.Component {
 		this.setState({ current: newState });
 
 		const record = this.stack[newState];
-		const h = hash(record.value);
-		this.props.onHashChange(h);
+		this.props.onChange(record.value);
 	}
 
 	save() {
 		const record = this.stack[this.state.current];
-		const h = hash(record.value);
-		this.props.onSave(record.value, h);
+		this.props.onSave(record.value);
 	}
 
 	genKey(platform, cmd, ctrl, shift, alt, charCode) {
@@ -299,6 +300,6 @@ Editor.defaultProps = {
 	onSave: () => { },
 	renderHighlight: (a) => a,
 	renderErrors: (a) => a,
-	onHashChange: () => { },
+	onChange: () => { },
 	editable: true
 }

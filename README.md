@@ -44,6 +44,7 @@ export default class Home extends React.Component {
 * `initialValue`: "",
 * `fontFamily`: "Fira code,Fira Mono,Consolas,Menlo,Courier,monospace",
 * `onSave`: () => { },
+* `onChange`: () => { },
 * `renderHighlight`: (a) => a,
 * `renderErrors`: (a) => a,
 * `editable`: true 

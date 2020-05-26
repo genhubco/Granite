@@ -19,8 +19,8 @@ const App = () => (
 		renderErrors={(text) => renderErrors(text, [], [{
 			pos: [5, 10]
 		}])}
-		onHashChange={(hash) => console.log(hash)}
-		onSave={(text, hash) => console.log(text, hash)}
+		onChange={(text) => console.log(text)}
+		onSave={(text) => console.log(text)}
 		editable={true}
 	/>
 );
