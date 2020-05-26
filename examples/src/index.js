@@ -14,12 +14,11 @@ const App = () => (
 		initialValue={def}
 		keyMap={keyMap}
 		padding={15}
-		warnings={[{
-			pos: [0, 10]
-		}]}
 		lifeCycleMap={lifeCycleMap}
 		renderHighlight={renderEmergence}
-		renderErrors={renderErrors}
+		renderErrors={(text) => renderErrors(text, [], [{
+			pos: [5, 10]
+		}])}
 		editable={true}
 	/>
 );

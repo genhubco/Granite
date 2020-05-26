@@ -18,9 +18,9 @@ function renderEmergence(text) {
 	return text;
 }
 
-function renderErrors(text, errors, warnings) {
+function renderErrors(text, errors = [], warnings = []) {
 	const arrToProcess = errors.length ? errors : warnings;
-	const color = errors.length ? "#ff2052" : "#ff9500";
+	const color = errors.length ? "#ff2052" : "#ffbf00";
 	let sorted = arrToProcess.sort((a, b) => b.pos[0] - a.pos[0]);
 	let newText = text;
 	sorted.forEach(item => {

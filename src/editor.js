@@ -173,8 +173,6 @@ export default class Editor extends React.Component {
 			fontFamily,
 			fontSize,
 			background,
-			errors,
-			warnings
 		} = this.props;
 
 		const record = this.stack[this.state.current];
@@ -185,7 +183,7 @@ export default class Editor extends React.Component {
 		}
 
 		let highlighted = renderHighlight(record.value);
-		let errorsHighlight = renderErrors(record.value, errors, warnings);
+		let errorsHighlight = renderErrors(record.value);
 		let lines = record.value.split("\n");
 
 		const editorStyles = {
@@ -231,19 +229,16 @@ export default class Editor extends React.Component {
 					background,
 					display: "inline-block"
 				}}>
-					{
-						(errors.length || warnings.length) ?
-							<div
-								className="granit-editor-errors"
-								style={{
-									...editorStyles,
-									color: "transparent",
-									pointerEvents: "none",
-								}}
-								ref={this.onErrorsRef}
-								dangerouslySetInnerHTML={{ __html: errorsHighlight + '<br />' }}
-							/> : null
-					}
+					<div
+						className="granit-editor-errors"
+						style={{
+							...editorStyles,
+							color: "transparent",
+							pointerEvents: "none",
+						}}
+						ref={this.onErrorsRef}
+						dangerouslySetInnerHTML={{ __html: errorsHighlight + '<br />' }}
+					/>
 					<div
 						className="granit-editor-highlight"
 						style={{ ...editorStyles, pointerEvents: "none", }}
@@ -284,8 +279,6 @@ Editor.defaultProps = {
 	width: 730,
 	height: 400,
 	fontSize: 16,
-	errors: [],
-	warnings: [],
 	background: "#f2f3f4",
 	initialValue: "",
 	fontFamily: "Fira code,Fira Mono,Consolas,Menlo,Courier,monospace",
