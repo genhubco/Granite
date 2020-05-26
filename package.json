@@ -38,5 +38,8 @@
 		"webpack": "^4.29.6",
 		"webpack-cli": "^3.3.11",
 		"webpack-dev-server": "^3.11.0"
+	},
+	"dependencies": {
+		"object-hash": "^2.0.3"
 	}
 }

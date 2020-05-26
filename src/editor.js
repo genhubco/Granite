@@ -1,4 +1,5 @@
 import React from "react";
+import hash from "object-hash";
 
 function platform() {
 	const isWindows = "navigator" in global && /Win/i.test(navigator.platform);
@@ -43,25 +44,38 @@ export default class Editor extends React.Component {
 		this.stack.push(newRecord);
 
 		this.setState({ current: this.state.current + 1 });
+		const h = hash(newRecord.value);
+		this.props.onHashChange(h);
 	}
 
 	undo() {
 		if (this.state.current <= 0) {
 			return;
 		}
-		this.setState({ current: this.state.current - 1 });
+		const newState = this.state.current - 1;
+		this.setState({ current: newState });
+
+		const record = this.stack[newState];
+		const h = hash(record.value);
+		this.props.onHashChange(h);
 	}
 
 	redo() {
 		if (this.state.current >= this.stack.length - 1) {
 			return;
 		}
-		this.setState({ current: this.state.current + 1 });
+		const newState = this.state.current + 1
+		this.setState({ current: newState });
+
+		const record = this.stack[newState];
+		const h = hash(record.value);
+		this.props.onHashChange(h);
 	}
 
 	save() {
 		const record = this.stack[this.state.current];
-		this.props.onSave(record.value);
+		const h = hash(record.value);
+		this.props.onSave(record.value, h);
 	}
 
 	genKey(platform, cmd, ctrl, shift, alt, charCode) {
@@ -285,5 +299,6 @@ Editor.defaultProps = {
 	onSave: () => { },
 	renderHighlight: (a) => a,
 	renderErrors: (a) => a,
+	onHashChange: () => { },
 	editable: true
 }
