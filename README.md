@@ -40,8 +40,6 @@ export default class Home extends React.Component {
 * `width`: 500,
 * `height`: 300,
 * `fontSize`: 16,
-* `errors`: [],
-* `warnings`: [],
 * `background`: "#f2f3f4",
 * `initialValue`: "",
 * `fontFamily`: "Fira code,Fira Mono,Consolas,Menlo,Courier,monospace",
