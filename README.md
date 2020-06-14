@@ -1,4 +1,4 @@
-![Bg](static/bg.svg)
+![Bg](static/granit-bg.svg)
 
 ## About
 Minimalistic, modular code editor for the web.
