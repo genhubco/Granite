@@ -183,7 +183,6 @@ export default class Editor extends React.Component {
 			renderHighlight,
 			renderErrors,
 			editable,
-			width,
 			height,
 			fontFamily,
 			fontSize,
@@ -219,7 +218,7 @@ export default class Editor extends React.Component {
 		return (
 			<div className="granit-editor" style={{
 				height: `${height}px`,
-				width: `${width}px`,
+				width: `100%`,
 				display: "flex",
 			}}>
 				<div ref={this.onLinesRef} className="granit-editor-lines" style={{
@@ -291,7 +290,6 @@ export default class Editor extends React.Component {
 Editor.defaultProps = {
 	keyMap: {},
 	lifeCycleMap: {},
-	width: 730,
 	height: 400,
 	fontSize: 16,
 	background: "#f2f3f4",
