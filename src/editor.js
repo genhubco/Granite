@@ -237,7 +237,6 @@ export default class Editor extends React.Component {
 				</div>
 				<div className="granit-editor-container" style={{
 					position: "relative",
-					height: "100%",
 					width: "100%",
 					background,
 					display: "inline-block"
