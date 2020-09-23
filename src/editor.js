@@ -203,6 +203,7 @@ export default class Editor extends React.Component {
 			fontSize: `${fontSize}px`,
 			height: "100%",
 			width: "100%",
+			flex: 1,
 			overflow: "hidden",
 			whiteSpace: "pre",
 			wordBreak: "normal",

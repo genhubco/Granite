@@ -1,33 +1,156 @@
-function renderEmergence(text) {
-	let fnName = /[\s|\n|\t]?(fn|gene)\s(\w+)(?:\s|\()/g;
-	let keywords = /[\s|\n|\t]?(let)[\s|\n|\t]/g;
-	let signs = /(=|~\||~&|~^|~|&|\||->)/g;
-	let fnCall = /(\w+)\(/g;
-
-	text = text.replace(signs, (match, p1) => match
-		.replace(p1, `<span class="granit-sign" style="color: #929ba3;">${p1}</span>`)
-	).replace(fnName, (match, p1, p2) => match
-		.replace(p2, `<span class="granit-definition" style="color: #007fff;">${p2}</span>`)
-		.replace(p1, `<span class="granit-keyword" style="color: #e22bdf;">${p1}</span>`)
-	).replace(keywords, (match, p1) => match
-		.replace(p1, `<span class="granit-keyword" style="color: #e22bdf;">${p1}</span>`)
-	).replace(fnCall, (match, p1) => match
-		.replace(p1, `<span class="granit-call" style="color: #0d98ba;">${p1}</span>`)
-	);
-
-	return text;
+function makeIterator(array) {
+	let nextIndex = -1;
+	return {
+		next: () => {
+			nextIndex += 1;
+			return {
+				value: array[nextIndex],
+				done: nextIndex >= array.length
+			};
+		},
+		peek: () => {
+			const next = nextIndex + 1;
+			return {
+				value: array[next],
+				done: next >= array.length
+			};
+		}
+	};
 }
 
-function renderErrors(text, errors = [], warnings = []) {
-	const arrToProcess = errors.length ? errors : warnings;
-	const color = errors.length ? "#ff2052" : "#ffbf00";
+function scanNext(iter, pattern) {
+	const re = new RegExp(pattern);
+	const nextCh = iter.next().value;
+	let str = nextCh;
+	while (!iter.peek().done) {
+		const peekCh = iter.peek().value;
+		if (!re.test(peekCh)) {
+			return str;
+		}
+		const ch = iter.next().value;
+		str += ch;
+	}
+	return str;
+}
+
+function scanGroup(iter, ch) {
+	const chars = new RegExp("[a-zA-Z]");
+	const numbers = new RegExp("[0-9]");
+	if (ch === "~") {
+		return scanNext(iter, "[|&^]");
+	}
+	if (ch === "-") {
+		return scanNext(iter, ">");
+	}
+	if (chars.test(ch)) {
+		return scanNext(iter, "[a-zA-Z]")
+	}
+	if (numbers.test(ch)) {
+		return scanNext(iter, "[0-9]");
+	}
+
+	iter.next();
+	return ch;
+}
+
+function getGroupType(str) {
+	const chars = new RegExp("[a-zA-Z]");
+	const numbers = new RegExp("[0-9]");
+	const nones = [" ", "\t", "\n"];
+	const signs = ["(", ")", "{", "}", ",", ";", "=", "->", "@"];
+	const operations = ["~", "~|", "~&", "~^", "|", "&", "^"];
+	const values = ["true", "false"];
+	const keywords = ["let", "func", "test"];
+	if (nones.includes(str)) {
+		return "none";
+	}
+	if (signs.includes(str)) {
+		return "sign";
+	}
+	if (operations.includes(str)) {
+		return "operation";
+	}
+	if (values.includes(str)) {
+		return "value";
+	}
+	if (keywords.includes(str)) {
+		return "keyword";
+	}
+	if (chars.test(str)) {
+		return "symbol";
+	}
+	if (numbers.test(str)) {
+		return "value";
+	}
+
+	return "none";
+}
+
+function getTypeColor(type, previusTokens) {
+	const sign = "#929ba3";
+	const keyword = "#e22bdf";
+	const value = "#ebb000";
+	const operation = "#0d98ba";
+	const fnDef = "#007fff";
+
+	if (type === "sign") {
+		return sign;
+	}
+
+	if (type === "keyword") {
+		return keyword;
+	}
+
+	if (type === "value") {
+		return value;
+	}
+
+	if (type === "operation") {
+		return operation;
+	}
+
+	const prev = previusTokens[previusTokens.length - 1];
+
+	if (prev === "=" && type === "symbol") {
+		return operation;
+	}
+
+	if ((prev === "func" || prev === "test") && type === "symbol") {
+		return fnDef;
+	}
+
+	return "black";
+}
+
+function renderEmergence(text) {
+	const result = [];
+	const tokens = [];
+	const iter = makeIterator(text);
+
+	while (!iter.peek().done) {
+		const ch = iter.peek().value;
+		const group = scanGroup(iter, ch);
+		const type = getGroupType(group);
+		const color = getTypeColor(type, tokens);
+		console.log(group, type, color);
+		if (type !== "none") {
+			tokens.push(group);
+		}
+		result.push(`<span style="color: ${color};">${group}</span>`);
+	}
+
+	return result.join("");
+}
+
+function renderErrors(text, errors = []) {
+	const arrToProcess = errors;
 	let sorted = arrToProcess.sort((a, b) => b.pos[0] - a.pos[0]);
 	let newText = text;
 	sorted.forEach(item => {
 		const before = newText.substring(0, item.pos[0]);
 		const str = newText.substring(item.pos[0], item.pos[0] + item.pos[1]);
 		const after = newText.substring(item.pos[0] + item.pos[1], newText.length);
-		newText = before + `<span class="granit-error" style="color: ${color}; text-decoration: underline;">${str}</span>` + after;
+		newText = before + `<span class="granit-error" style="color: #ff2052; text-decoration: underline;">${str}</span>` + after;
 	});
 	return newText;
 }

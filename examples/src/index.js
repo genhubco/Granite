@@ -2,27 +2,49 @@ import React from "react";
 import { render } from "react-dom";
 import Editor, { keyMap, lifeCycleMap, renderEmergence, renderErrors } from "../../src/index";
 
-const def = `fn not a -> b {
+const def = `func not a -> b {
 	b = ~a;
 }
 
-gene main TetR -> RFP {
-	RFP = not(TetR);
+func main TetR -> RFP {
+	let a = not(TetR);
+	RFP = not(a);
 }`;
 const App = () => (
-	<Editor
-		initialValue={def}
-		keyMap={keyMap}
-		padding={15}
-		lifeCycleMap={lifeCycleMap}
-		renderHighlight={renderEmergence}
-		renderErrors={(text) => renderErrors(text, [], [{
-			pos: [5, 10]
-		}])}
-		onChange={(text) => console.log(text)}
-		onSave={(text) => console.log(text)}
-		editable={true}
-	/>
+	<div style={{
+		height: "100vh",
+		maxHeight: "100vh",
+	}}>
+		<div style={{
+			minHeight: "100px"
+		}} />
+		<div style={{
+			height: "calc(100vh - 200px)",
+		}}>
+			<div style={{
+				display: "inline-block",
+				width: "50%",
+			}}>
+				<Editor
+					initialValue={def}
+					keyMap={keyMap}
+					padding={15}
+					lifeCycleMap={lifeCycleMap}
+					renderHighlight={renderEmergence}
+					editable={true}
+				/>
+			</div>
+			<div style={{
+				display: "inline-block",
+				width: "50%",
+			}}>
+				asdasda
+			</div>
+		</div>
+		<div style={{
+			minHeight: "100px"
+		}} />
+	</div >
 );
 
 render(<App />, document.getElementById("root"));
