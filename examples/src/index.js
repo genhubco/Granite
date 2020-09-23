@@ -6,9 +6,26 @@ const def = `func not a -> b {
 	b = ~a;
 }
 
-func main TetR -> RFP {
-	let a = not(TetR);
-	RFP = not(a);
+func nor(a, b) -> c {
+	c = a ~| b;
+}
+
+func main(in1, in2, in3) -> out {
+	let ntl = nor(in1, in2);
+	let nl = not(in2);
+	let nla = nor(nl, in3);
+	out = nor(nla, ntl);
+}
+
+test main (TetR, LacI, AraC) -> RFP {
+	@100
+	TetR = true;
+	@200
+	TetR = false;
+	LacI = true;
+    @300
+    AraC = true;
+    TetR = true;
 }`;
 const App = () => (
 	<div style={{

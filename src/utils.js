@@ -43,7 +43,7 @@ function scanGroup(iter, ch) {
 		return scanNext(iter, ">");
 	}
 	if (chars.test(ch)) {
-		return scanNext(iter, "[a-zA-Z]")
+		return scanNext(iter, "[a-zA-Z0-9]")
 	}
 	if (numbers.test(ch)) {
 		return scanNext(iter, "[0-9]");
@@ -57,8 +57,8 @@ function getGroupType(str) {
 	const chars = new RegExp("[a-zA-Z]");
 	const numbers = new RegExp("[0-9]");
 	const nones = [" ", "\t", "\n"];
-	const signs = ["(", ")", "{", "}", ",", ";", "=", "->", "@"];
-	const operations = ["~", "~|", "~&", "~^", "|", "&", "^"];
+	const signs = ["(", ")", "{", "}", ",", ";", "=", "->"];
+	const operations = ["~", "~|", "~&", "~^", "|", "&", "^", "@"];
 	const values = ["true", "false"];
 	const keywords = ["let", "func", "test"];
 	if (nones.includes(str)) {
@@ -86,10 +86,10 @@ function getGroupType(str) {
 	return "none";
 }
 
-function getTypeColor(type, previusTokens) {
+function getTypeColor(type, previusToken, nextToken) {
 	const sign = "#929ba3";
 	const keyword = "#e22bdf";
-	const value = "#ebb000";
+	const value = "#d97512";
 	const operation = "#0d98ba";
 	const fnDef = "#007fff";
 
@@ -109,13 +109,11 @@ function getTypeColor(type, previusTokens) {
 		return operation;
 	}
 
-	const prev = previusTokens[previusTokens.length - 1];
-
-	if (prev === "=" && type === "symbol") {
+	if (previusToken === "=" && type === "symbol" && nextToken == "(") {
 		return operation;
 	}
 
-	if ((prev === "func" || prev === "test") && type === "symbol") {
+	if ((previusToken === "func" || previusToken === "test") && type === "symbol") {
 		return fnDef;
 	}
 
@@ -124,17 +122,16 @@ function getTypeColor(type, previusTokens) {
 
 function renderEmergence(text) {
 	const result = [];
-	const tokens = [];
 	const iter = makeIterator(text);
 
+	let prevToken = "";
 	while (!iter.peek().done) {
 		const ch = iter.peek().value;
 		const group = scanGroup(iter, ch);
 		const type = getGroupType(group);
-		const color = getTypeColor(type, tokens);
-		console.log(group, type, color);
+		const color = getTypeColor(type, prevToken, iter.peek().value);
 		if (type !== "none") {
-			tokens.push(group);
+			prevToken = group;
 		}
 		result.push(`<span style="color: ${color};">${group}</span>`);
 	}
