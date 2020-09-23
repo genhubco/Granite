@@ -1,6 +1,6 @@
 {
 	"name": "granit",
-	"version": "0.0.40",
+	"version": "0.0.41",
 	"description": "Modern minimalistic code editor for the web",
 	"main": "dist/index.js",
 	"scripts": {
